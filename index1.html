@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Presupuesto Personal</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Presupuesto Personal</h1>
+        
+        <!-- Sección para mostrar detalle y gestionar ingresos -->
+        <div id="incomeSection">
+            <h2>Ingresos</h2>
+            <ul id="incomeList"></ul>
+            <label for="incomeDescription">Descripción:</label>
+            <input type="text" id="incomeDescription">
+            <label for="incomeAmount">Monto:</label>
+            <input type="number" id="incomeAmount">
+            <button onclick="addIncome()">Agregar Ingreso</button>
+        </div>
+        
+        <!-- Sección para mostrar detalle y gestionar gastos -->
+        <div id="expenseSection">
+            <h2>Gastos</h2>
+            <ul id="expenseList"></ul>
+            <label for="expenseDescription">Descripción:</label>
+            <input type="text" id="expenseDescription">
+            <label for="expenseAmount">Monto:</label>
+            <input type="number" id="expenseAmount">
+            <button onclick="addExpense()">Agregar Gasto</button>
+        </div>
+        
+        <!-- Sección para mostrar detalle y gestionar el presupuesto -->
+        <div id="budgetSection">
+            <h2>Presupuesto</h2>
+            <ul id="budgetList"></ul>
+            <label for="budgetDescription">Descripción:</label>
+            <input type="text" id="budgetDescription">
+            <label for="budgetAmount">Monto:</label>
+            <input type="number" id="budgetAmount">
+            <button onclick="addBudget()">Agregar Presupuesto</button>
+        </div>
+
+        <!-- Resumen del presupuesto -->
+        <div id="budgetSummary">
+            <h2>Resumen del Presupuesto</h2>
+            <p>Total Ingresos: $<span id="totalIncome">0.00</span></p>
+            <p>Total Gastos: $<span id="totalExpense">0.00</span></p>
+            <p>Presupuesto Mensual: $<span id="monthlyBudget">0.00</span></p>
+            <p>Presupuesto Anual: $<span id="annualBudget">0.00</span></p>
+            <p>Balance: $<span id="balance">0.00</span></p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+

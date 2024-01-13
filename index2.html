@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto Personal</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        // Componente principal
+        class BudgetApp extends React.Component {
+            // Estado inicial con ingresos, gastos y presupuestos vacíos
+            state = {
+                incomes: [],
+                expenses: [],
+                budgets: []
+            };
+
+            // Llamamos a loadData al cargar el componente
+            componentDidMount() {
+                this.loadData();
+            }
+
+            // Función para cargar datos del almacenamiento local
+            loadData() {
+                const savedIncomes = localStorage.getItem('incomes');
+                const savedExpenses = localStorage.getItem('expenses');
+                const savedBudgets = localStorage.getItem('budgets');
+
+                if (savedIncomes) {
+                    this.setState({ incomes: JSON.parse(savedIncomes) });
+                }
+
+                if (savedExpenses) {
+                    this.setState({ expenses: JSON.parse(savedExpenses) });
+                }
+
+                if (savedBudgets) {
+                    this.setState({ budgets: JSON.parse(savedBudgets) });
+                }
+            }
+
+            // Función para agregar elementos a las listas
+            addItem = (listType, newItem) => {
+                this.setState(prevState => ({
+                    [listType]: [...prevState[listType], newItem]
+                }), this.saveData); // Guardar datos después de agregar elemento
+            };
+
+            // Función para editar elementos en las listas
+            editItem = (listType, index, editedItem) => {
+                this.setState(prevState => {
+                    const newList = [...prevState[listType]];
+                    newList[index] = editedItem;
+                    return { [listType]: newList };
+                }, this.saveData); // Guardar datos después de editar elemento
+            };
+
+            // Función para borrar elementos de las listas
+            deleteItem = (listType, index) => {
+                this.setState(prevState => {
+                    const newList = [...prevState[listType]];
+                    newList.splice(index, 1);
+                    return { [listType]: newList };
+                }, this.saveData); // Guardar datos después de borrar elemento
+            };
+
+            // Función para guardar datos en el almacenamiento local
+            saveData() {
+                localStorage.setItem('incomes', JSON.stringify(this.state.incomes));
+                localStorage.setItem('expenses', JSON.stringify(this.state.expenses));
+                localStorage.setItem('budgets', JSON.stringify(this.state.budgets));
+            }
+
+            // Función para calcular el total de ingresos, gastos o presupuestos
+            calculateTotal = items => {
+                return items.reduce((total, item) => total + item.amount, 0);
+            };
+
+            // Función para formatear números con comas
+            formatNumber = number => {
+                return number.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
+            };
+
+            // Renderizar la aplicación
+            render() {
+                const { incomes, expenses, budgets } = this.state;
+
+                return (
+                    <div className="container">
+                        <h1>Presupuesto Personal</h1>
+
+                        {/* Componente para manejar ingresos */}
+                        <BudgetList
+                            title="Ingresos"
+                            list={incomes}
+                            addItem={newItem => this.addItem('incomes', newItem)}
+                            editItem={(index, editedItem) => this.editItem('incomes', index, editedItem)}
+                            deleteItem={index => this.deleteItem('incomes', index)}
+                        />
+
+                        {/* Componente para manejar gastos */}
+                        <BudgetList
+                            title="Gastos"
+                            list={expenses}
+                            addItem={newItem => this.addItem('expenses', newItem)}
+                            editItem={(index, editedItem) => this.editItem('expenses', index, editedItem)}
+                            deleteItem={index => this.deleteItem('expenses', index)}
+                        />
+
+                        {/* Componente para manejar presupuestos */}
+                        <BudgetList
+                            title="Presupuestos"
+                            list={budgets}
+                            addItem={newItem => this.addItem('budgets', newItem)}
+                            editItem={(index, editedItem) => this.editItem('budgets', index, editedItem)}
+                            deleteItem={index => this.deleteItem('budgets', index)}
+                        />
+
+                        {/* Componente para mostrar el resumen del presupuesto */}
+                        <BudgetSummary
+                            totalIncome={this.calculateTotal(incomes)}
+                            totalExpense={this.calculateTotal(expenses)}
+                            monthlyBudget={this.calculateTotal(budgets)}
+                        />
+                    </div>
+                );
+            }
+        }
+
+        // Componente para manejar las listas de ingresos, gastos y presupuestos
+        class BudgetList extends React.Component {
+            // Estado inicial con descripción y monto vacíos
+            state = {
+                description: '',
+                amount: '',
+                editIndex: null // Nuevo estado para rastrear el índice de edición
+            };
+
+            // Función para manejar cambios en los campos de entrada
+            handleChange = event => {
+                this.setState({
+                    [event.target.name]: event.target.value
+                });
+            };
+
+            // Función para manejar la adición de un nuevo elemento
+            handleAddItem = () => {
+                const { description, amount } = this.state;
+
+                if (description && !isNaN(amount) && amount > 0) {
+                    const newItem = { description, amount: parseFloat(amount) };
+                    this.props.addItem(newItem);
+                    this.setState({
+                        description: '',
+                        amount: ''
+                    });
+                } else {
+                    alert('Ingresa una descripción válida y un monto positivo.');
+                }
+            };
+
+            // Función para manejar la edición de un elemento existente
+            handleEditItem = index => {
+                const { description, amount } = this.state;
+
+                if (description && !isNaN(amount) && amount > 0) {
+                    const editedItem = { description, amount: parseFloat(amount) };
+                    this.props.editItem(index, editedItem);
+                    this.setState({
+                        description: '',
+                        amount: '',
+                        editIndex: null // Restablecer el índice de edición
+                    });
+                } else {
+                    alert('Ingresa una descripción válida y un monto positivo.');
+                }
+            };
+
+            // Función para activar la edición de un elemento
+            handleStartEdit = (index, item) => {
+                this.setState({
+                    description: item.description,
+                    amount: item.amount.toString(),
+                    editIndex: index
+                });
+            };
+
+            // Renderizar el componente
+            render() {
+                const { title, list, deleteItem } = this.props;
+                const { description, amount, editIndex } = this.state;
+
+                return (
+                    <div>
+                        <h2>{title}</h2>
+                        <ul>
+                            {list.map((item, index) => (
+                                <li key={index}>
+                                    {item.description}: ${item.amount}
+                                    <button onClick={() => this.handleStartEdit(index, item)}>Modificar</button>
+                                    <button onClick={() => deleteItem(index)}>Borrar</button>
+                                </li>
+                            ))}
+                        </ul>
+                        <label htmlFor={`${title.toLowerCase()}Description`}>Descripción:</label>
+                        <input
+                            type="text"
+                            id={`${title.toLowerCase()}Description`}
+                            name="description"
+                            value={description}
+                            onChange={this.handleChange}
+                        />
+                        <label htmlFor={`${title.toLowerCase()}Amount`}>Monto:</label>
+                        <input
+                            type="number"
+                            id={`${title.toLowerCase()}Amount`}
+                            name="amount"
+                            value={amount}
+                            onChange={this.handleChange}
+                        />
+                        {editIndex !== null ? (
+                            <button onClick={() => this.handleEditItem(editIndex)}>Guardar Edición</button>
+                        ) : (
+                            <button onClick={this.handleAddItem}>Agregar {title.substring(0, title.length - 1)}</button>
+                        )}
+                    </div>
+                );
+            }
+        }
+
+        // Componente para mostrar el resumen del presupuesto
+        const BudgetSummary = ({ totalIncome, totalExpense, monthlyBudget }) => (
+            <div>
+                <h2>Resumen del Presupuesto</h2>
+                <p>Total Ingresos: ${totalIncome}</p>
+                <p>Total Gastos: ${totalExpense}</p>
+                <p>Presupuesto Mensual: ${monthlyBudget}</p>
+            </div>
+        );
+
+        // Renderizar la aplicación en el elemento con id "root"
+        ReactDOM.render(<BudgetApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
