@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Presupuesto Personal</title>
+</head>
+
+<body>
+  <header>
+    <div class="company-info">
+        <h1>Presupuesto Personal</h1>
+        <p>Controle sus gastos mensualmente</p>
+    </div>
+    <div class="logo">
+        <img class="ampliable" src="logo3.jpg" alt="Logo de Información & Marketing">
+    </div>
+  </header>
+
+  <!-- Formulario para agregar items -->
+  <div id="itemForm">
+    <form id="addItemForm" method="POST" onsubmit="return obtenerValoresLimpios()">
+      <!-- Primera línea horizontal -->
+      <div class="form-row">
+          <br>
+          <label for="codigo">Código:</label>
+          <input type="text" id="codigo" name="codigo" style="width: 20px"; required>
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" style="width: 300px;" required>
+      </div>    
+      <!-- Subtítulo -->
+      <h2 style="font-size: 18px; margin-top: 10px; position: absolute; left: 110px; word-spacing: 50px;">Presupuesto Ejecutado Diferencia</h2>
+      <br><br>
+      <!-- Segunda línea horizontal -->
+      <div class="form-column form-column-three">
+        <div class="form-group form-group-three">
+          <label for="enero">Enero:</label>
+          <input type="text" id="enero" name="enero" value="0" oninput="formatearYMostrar(this)">
+          <input type="text" id="r1" name="r1" value="0" oninput="formatearYMostrar(this)">
+          <label for="febrero">Febrero:</label>
+          <input type="text" id="febrero" name="febrero" value="0" oninput="formatearYMostrar(this)">
+          <input type="number" id="r2" name="r2" value="0" oninput="formatearYMostrar(this)">
+          <label for="marzo">Marzo:</label>
+          <input type="number" id="marzo" name="marzo" value="0" oninput="formatearYMostrar(this)">
+          <input type="number" id="r3" name="r3" value="0" oninput="formatearYMostrar(this)">
+          <label for="abril">Abril:</label>
+          <input type="number" id="abril" name="abril" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r4" name="r4" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="mayo">Mayo:</label>
+          <input type="number" id="mayo" name="mayo" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r5" name="r5" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="junio">Junio:</label>
+          <input type="number" id="junio" name="junio" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r6" name="r6" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="julio">Julio:</label>
+          <input type="number" id="julio" name="julio" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r7" name="r7" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="agosto">Agosto:</label>
+          <input type="number" id="agosto" name="agosto" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r8" name="r8" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="septiembre">Septiembre:</label>
+          <input type="number" id="septiembre" name="septiembre" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r9" name="r9" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="octubre">Octubre:</label>
+          <input type="number" id="octubre" name="octubre" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r10" name="r10" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="noviembre">Noviembre:</label>
+          <input type="number" id="noviembre" name="noviembre" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r11" name="r11" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="diciembre">Diciembre:</label>
+          <input type="number" id="diciembre" name="diciembre" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r12" name="r12" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="totalano">Total año:</label>
+          <input type="number" id="totalano" name="totalano" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <input type="number" id="r13" name="r13" value="0" min="0" step="1" oninput="formatNumber(this)">
+          <label for="ano">Año AAAA:</label>
+          <input type="number" id="ano" name="ano" style="width: 50px;" value="2024" required>
+        </div>
+      </div>     
+            <!-- Agrega más campos según sea necesario -->
+        
+        <!-- Agrega más filas de campos según sea necesario -->
+      <button type="button" onclick="enviarFormulario()">Agregar Item</button>
+    </form>
+
+    <!-- Mostrar y modificar la información de los items aquí -->
+    <div id="itemList"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
